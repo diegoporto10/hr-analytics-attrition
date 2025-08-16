@@ -12,7 +12,7 @@
 - **Audience:** People Ops, HRBPs, Business Leaders  
 - **Outcomes:** 1) find **drivers**, 2) identify **high-risk cohorts**, 3) propose **quick wins** with cost impact
 
-**Dataset.** [IBM HR (public)] — classic anonymized HR sample for analytics demos.
+**Dataset.** IBM HR (public) — a classic anonymized HR sample for analytics demos.
 
 ---
 
@@ -23,11 +23,12 @@
 **Data shaping (Power Query)**
 - Renamed columns for readability (e.g., `YearsAtCompany` → “Years at Company”).
 - Derived **Age Group** (18–29, 30–39, 40–49, 50+) and **Tenure Group** (<1, 1–3, 3–5, 5–10, 10+).
-- Cleaned categories; kept the model **single-table** (star-lite) for simplicity.
+- Cleaned categories; kept a **single-table** model for simplicity.
 
 **Key measures (DAX)**
 ```DAX
-Attrition Count := COUNTROWS(FILTER('HRData','HRData'[Attrition]="Yes"))
+Attrition Count :=
+COUNTROWS(FILTER('HRData','HRData'[Attrition] = "Yes"))
 
 Attrition Rate :=
 DIVIDE([Attrition Count], COUNTROWS('HRData'))
@@ -37,9 +38,10 @@ CALCULATE([Attrition Rate], ALL('HRData'))
 
 Bar Color (Risk) :=
 VAR r = [Attrition Rate]
-RETURN IF(r >= [Overall Attrition Rate], "#D62728", "#1F77B4")  -- red if above avg
+RETURN IF(r >= [Overall Attrition Rate], "#D62728", "#1F77B4")
 
-Replacement Months (sel) := COALESCE(SELECTEDVALUE(Assumptions[Replacement Months]), 2)
+Replacement Months (sel) :=
+COALESCE(SELECTEDVALUE(Assumptions[Replacement Months]), 2)
 
 Cost of Attrition (est) :=
 [Attrition Count] * ( [Avg Monthly Income] * [Replacement Months (sel)] )
